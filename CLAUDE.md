@@ -96,8 +96,11 @@ Tres colores y una tipografía. No se agrega ninguno más sin que yo lo pida.
 | Gris | `#f4f6f8` al fondo, `#dde3ea` en los bordes | fondo de la página y líneas que separan |
 | Negro | `#1a2027` | todo el texto |
 
-La tipografía es **Arial**, con `Helvetica, sans-serif` de respaldo por si el
-aparato no la tiene.
+La tipografía es **la del propio aparato**: `system-ui`, con `-apple-system`,
+`"Segoe UI"` y `sans-serif` de respaldo. Se usa la letra que el teléfono o la
+computadora ya trae, para que el texto se vea como el resto de esa pantalla y no
+haya nada que descargar. Es lo que `index.html` usa hoy y así se queda: no la
+cambies a Arial ni a ninguna otra sin que yo lo pida.
 
 En modo oscuro se conservan los mismos tres papeles con versiones aclaradas u
 oscurecidas de esos colores, que ya están escritas en `index.html`. El azul es el
