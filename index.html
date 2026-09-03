@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Todavía no hay nada aquí</title>
+<title>Registros</title>
 <style>
   :root { color-scheme: light dark; }
   body {
     margin: 0; min-height: 100vh;
-    display: grid; place-items: center;
+    display: grid; place-items: start center;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     background: #f4f6f8; color: #1a2027;
     padding: 24px;
@@ -16,33 +16,152 @@
   @media (prefers-color-scheme: dark) {
     body { background: #121820; color: #e8eef5; }
     .caja { background: #1b232e !important; border-color: #2b3644 !important; }
-    code { background: #253040 !important; }
+    input, textarea { background: #121820 !important; color: #e8eef5 !important; border-color: #2b3644 !important; }
+    .fila { border-color: #2b3644 !important; }
+    button { background: #3b6ea5 !important; }
   }
+  .hoja { width: 100%; max-width: 560px; }
   .caja {
     background: #fff; border: 1px solid #dde3ea; border-radius: 14px;
-    padding: 34px; max-width: 480px; text-align: center;
+    padding: 28px; margin-bottom: 20px;
     box-shadow: 0 10px 30px -18px rgba(0,0,0,.3);
   }
-  h1 { font-size: 22px; margin: 0 0 10px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  h2 { font-size: 16px; margin: 0 0 14px; font-weight: 600; }
   p { margin: 0 0 14px; line-height: 1.55; }
   p:last-child { margin-bottom: 0; }
-  code {
-    background: #eef2f6; padding: 2px 6px; border-radius: 4px;
-    font-family: ui-monospace, "Consolas", monospace; font-size: .9em;
+  label { display: block; font-size: 14px; margin-bottom: 5px; }
+  input, textarea {
+    width: 100%; box-sizing: border-box; padding: 9px 11px;
+    border: 1px solid #dde3ea; border-radius: 8px;
+    font-family: inherit; font-size: 15px; background: #fff; color: inherit;
+    margin-bottom: 14px;
   }
+  textarea { resize: vertical; min-height: 84px; }
+  button {
+    padding: 10px 20px; border: 0; border-radius: 8px;
+    background: #2b5f96; color: #fff; font-size: 15px; cursor: pointer;
+  }
+  button[disabled] { opacity: .55; cursor: default; }
+  .aviso { font-size: 14px; margin-top: 12px; min-height: 20px; }
   .chica { font-size: 14px; opacity: .75; }
+  .fila { border-top: 1px solid #dde3ea; padding: 14px 0; }
+  .fila:first-of-type { border-top: 0; padding-top: 0; }
+  .quien { font-weight: 600; }
+  .cuando { font-size: 13px; opacity: .65; margin-left: 8px; font-weight: 400; }
+  .dice { margin: 4px 0 0; white-space: pre-wrap; }
 </style>
 </head>
 <body>
-  <div class="caja">
-    <h1>Todavía no hay nada aquí</h1>
-    <p>Y eso es exactamente lo que tiene que decir hoy.</p>
-    <p>Si estás leyendo esto en tu propia liga, quiere decir que
-       <strong>tu repositorio, tu publicación y tu página ya funcionan</strong>.
-       Es todo lo que necesitabas antes de la sesión.</p>
-    <p class="chica">El martes le vas a pedir a Claude que reemplace esta página
-       por la tuya. Este archivo se llama <code>index.html</code> y es el único
-       que hay que cambiar.</p>
+  <div class="hoja">
+
+    <div class="caja">
+      <h1>Deja tu mensaje</h1>
+      <p class="chica">Lo que escribas se guarda y queda a la vista de todos. No se puede borrar.</p>
+      <form id="formulario">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" maxlength="80" required autocomplete="name">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" maxlength="600" required></textarea>
+        <button type="submit" id="enviar">Guardar</button>
+        <div class="aviso" id="aviso"></div>
+      </form>
+    </div>
+
+    <div class="caja">
+      <h2>Lo que se ha escrito</h2>
+      <div id="lista"><p class="chica">Cargando…</p></div>
+    </div>
+
   </div>
+
+<script>
+const URL_BASE = "https://aheqqfzgfgjxwylupmrd.supabase.co/rest/v1/registros";
+const LLAVE = "sb_publishable_B9DQfvhqxuJnunAui8RbKw_eO98xU_a";
+const CABECERAS = { apikey: LLAVE, Authorization: "Bearer " + LLAVE };
+
+const lista = document.getElementById("lista");
+const aviso = document.getElementById("aviso");
+const boton = document.getElementById("enviar");
+
+function texto(valor) {
+  const nodo = document.createElement("span");
+  nodo.textContent = valor;
+  return nodo;
+}
+
+function fecha(valor) {
+  const d = new Date(valor);
+  if (isNaN(d)) return "";
+  return d.toLocaleString("es-MX", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+
+function pintar(renglones) {
+  lista.replaceChildren();
+  if (!renglones.length) {
+    const p = document.createElement("p");
+    p.className = "chica";
+    p.textContent = "Todavía no hay ningún mensaje.";
+    lista.appendChild(p);
+    return;
+  }
+  for (const r of renglones) {
+    const fila = document.createElement("div");
+    fila.className = "fila";
+    const quien = document.createElement("div");
+    quien.className = "quien";
+    quien.appendChild(texto(r.nombre));
+    const cuando = document.createElement("span");
+    cuando.className = "cuando";
+    cuando.textContent = fecha(r.creado_en);
+    quien.appendChild(cuando);
+    const dice = document.createElement("p");
+    dice.className = "dice";
+    dice.textContent = r.mensaje;
+    fila.append(quien, dice);
+    lista.appendChild(fila);
+  }
+}
+
+async function cargar() {
+  try {
+    const r = await fetch(URL_BASE + "?select=nombre,mensaje,creado_en&order=creado_en.desc", { headers: CABECERAS });
+    if (!r.ok) throw new Error(r.status);
+    pintar(await r.json());
+  } catch (e) {
+    lista.replaceChildren();
+    const p = document.createElement("p");
+    p.className = "chica";
+    p.textContent = "No se pudo leer la base en este momento. Vuelve a cargar la página.";
+    lista.appendChild(p);
+  }
+}
+
+document.getElementById("formulario").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const nombre = document.getElementById("nombre").value.trim();
+  const mensaje = document.getElementById("mensaje").value.trim();
+  if (!nombre || !mensaje) return;
+  boton.disabled = true;
+  aviso.textContent = "Guardando…";
+  try {
+    const r = await fetch(URL_BASE, {
+      method: "POST",
+      headers: { ...CABECERAS, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify({ nombre, mensaje })
+    });
+    if (!r.ok) throw new Error(r.status);
+    ev.target.reset();
+    aviso.textContent = "Guardado.";
+    await cargar();
+  } catch (e) {
+    aviso.textContent = "No se pudo guardar. Inténtalo otra vez.";
+  } finally {
+    boton.disabled = false;
+  }
+});
+
+cargar();
+</script>
 </body>
 </html>
