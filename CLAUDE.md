@@ -17,7 +17,22 @@ Los datos de esta página viven en una tabla de Supabase llamada `registros`.
 Ninguna cifra ni ningún texto que se muestre se escribe a mano en el HTML: todo
 sale de esa tabla o de lo que la persona escriba en el formulario.
 
-*(En la sesión le agregas las columnas que acabes usando.)*
+La tabla `registros` tiene estas columnas:
+
+| Columna | Tipo | Quién la llena |
+|---|---|---|
+| `id` | número consecutivo | la base, sola |
+| `nombre` | texto, obligatorio | la persona, en el formulario |
+| `mensaje` | texto, obligatorio | la persona, en el formulario |
+| `creado_en` | fecha y hora | la base, sola, al momento de guardar |
+
+Permisos de la tabla para quien entra a la página: puede **leer** y puede
+**agregar** renglones. No puede modificar, ni borrar, ni vaciar. Eso no es un
+acuerdo de palabra: son los permisos que tiene la tabla en la base, y ahí está
+comprobado.
+
+Los datos de conexión están escritos dentro de `index.html`: la dirección del
+proyecto y la llave publicable. No hay más lugares donde buscarlos.
 
 ## 3. Cómo quiero que trabajes aquí
 
@@ -45,10 +60,12 @@ que ser cierto para que puedas publicarlo.)*
 
 ## 6. Cómo vuelvo a abrir esto
 
-- El proyecto vive en este repositorio de GitHub.
+- El proyecto vive en `rs58nhgjhf-hub/mi-pagina-AVM-s7`, en GitHub.
 - Se abre pidiéndole a Claude una sesión sobre este repo; no hace falta descargarlo.
-- La página publicada está en la liga que da Netlify.
-- La base de datos está en supabase.com, en el proyecto de esta cuenta.
+- La página publicada está en la liga que da Netlify. *(Pendiente: todavía no se
+  ha conectado Netlify a este repositorio.)*
+- La base de datos está en supabase.com, en el proyecto **curso-S7claude-**,
+  región us-east-1. Su dirección es `https://aheqqfzgfgjxwylupmrd.supabase.co`.
 
 > **Si la página deja de mostrar datos después de una semana sin usarla**, casi
 > siempre es que el proyecto gratuito de Supabase se pausó. Se despierta con el
