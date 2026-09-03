@@ -3,53 +3,67 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Registros</title>
+<title>Deja tu mensaje</title>
 <style>
   :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
   body {
     margin: 0; min-height: 100vh;
     display: grid; place-items: start center;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     background: #f4f6f8; color: #1a2027;
-    padding: 24px;
+    padding: clamp(16px, 5vw, 48px) clamp(16px, 5vw, 24px);
   }
   @media (prefers-color-scheme: dark) {
     body { background: #121820; color: #e8eef5; }
     .caja { background: #1b232e !important; border-color: #2b3644 !important; }
     input, textarea { background: #121820 !important; color: #e8eef5 !important; border-color: #2b3644 !important; }
-    .fila { border-color: #2b3644 !important; }
+    .fila, .notas { border-color: #2b3644 !important; }
+    .nota { background: #121820 !important; border-color: #2b3644 !important; }
     button { background: #3b6ea5 !important; }
   }
-  .hoja { width: 100%; max-width: 560px; }
+  .hoja { width: 100%; max-width: 560px; display: grid; gap: 20px; }
   .caja {
     background: #fff; border: 1px solid #dde3ea; border-radius: 14px;
-    padding: 28px; margin-bottom: 20px;
+    padding: clamp(20px, 6vw, 34px);
     box-shadow: 0 10px 30px -18px rgba(0,0,0,.3);
   }
-  h1 { font-size: 22px; margin: 0 0 6px; }
+  h1 { font-size: clamp(24px, 7vw, 30px); line-height: 1.2; margin: 0 0 10px; }
   h2 { font-size: 16px; margin: 0 0 14px; font-weight: 600; }
-  p { margin: 0 0 14px; line-height: 1.55; }
-  p:last-child { margin-bottom: 0; }
+  .entrada { margin: 0 0 6px; line-height: 1.55; font-size: clamp(15px, 4vw, 17px); }
+  .chica { font-size: 14px; opacity: .75; line-height: 1.5; margin: 0; }
+  form { margin-top: clamp(18px, 5vw, 24px); }
   label { display: block; font-size: 14px; margin-bottom: 5px; }
-  input, textarea {
-    width: 100%; box-sizing: border-box; padding: 9px 11px;
+  input[type=text], textarea {
+    width: 100%; padding: 10px 11px;
     border: 1px solid #dde3ea; border-radius: 8px;
-    font-family: inherit; font-size: 15px; background: #fff; color: inherit;
-    margin-bottom: 14px;
+    font-family: inherit; font-size: 16px; background: #fff; color: inherit;
+    margin-bottom: 16px;
   }
-  textarea { resize: vertical; min-height: 84px; }
+  textarea { resize: vertical; min-height: 96px; }
+  fieldset { border: 0; padding: 0; margin: 0 0 18px; }
+  legend { padding: 0; font-size: 14px; margin-bottom: 8px; }
+  .notas { display: grid; gap: 8px; }
+  .nota {
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid #dde3ea; border-radius: 8px;
+    padding: 11px 13px; background: #fafbfc;
+    font-size: 15px; cursor: pointer;
+  }
+  .nota input { margin: 0; width: 18px; height: 18px; accent-color: #2b5f96; }
+  .nota:focus-within { outline: 2px solid #2b5f96; outline-offset: 1px; }
   button {
-    padding: 10px 20px; border: 0; border-radius: 8px;
-    background: #2b5f96; color: #fff; font-size: 15px; cursor: pointer;
+    padding: 12px 22px; border: 0; border-radius: 8px;
+    background: #2b5f96; color: #fff; font-size: 16px; cursor: pointer;
   }
   button[disabled] { opacity: .55; cursor: default; }
   .aviso { font-size: 14px; margin-top: 12px; min-height: 20px; }
-  .chica { font-size: 14px; opacity: .75; }
-  .fila { border-top: 1px solid #dde3ea; padding: 14px 0; }
+  .fila { border-top: 1px solid #dde3ea; padding: 15px 0; }
   .fila:first-of-type { border-top: 0; padding-top: 0; }
   .quien { font-weight: 600; }
   .cuando { font-size: 13px; opacity: .65; margin-left: 8px; font-weight: 400; }
-  .dice { margin: 4px 0 0; white-space: pre-wrap; }
+  .dice { margin: 4px 0 0; white-space: pre-wrap; line-height: 1.5; }
+  .califica { margin: 6px 0 0; font-size: 13px; opacity: .7; }
 </style>
 </head>
 <body>
@@ -57,12 +71,26 @@
 
     <div class="caja">
       <h1>Deja tu mensaje</h1>
+      <p class="entrada">Es un buzón de sugerencias: un lugar para dejar por escrito
+        lo que se puede hacer mejor, sin esperar a la siguiente junta.</p>
       <p class="chica">Lo que escribas se guarda y queda a la vista de todos. No se puede borrar.</p>
+
       <form id="formulario">
         <label for="nombre">Nombre</label>
-        <input id="nombre" name="nombre" maxlength="80" required autocomplete="name">
+        <input type="text" id="nombre" name="nombre" maxlength="80" required autocomplete="name">
+
         <label for="mensaje">Mensaje</label>
         <textarea id="mensaje" name="mensaje" maxlength="600" required></textarea>
+
+        <fieldset>
+          <legend>¿Cómo califica la eficiencia de este buzón? (opcional)</legend>
+          <div class="notas">
+            <label class="nota"><input type="radio" name="calificacion" value="excelente"> Excelente</label>
+            <label class="nota"><input type="radio" name="calificacion" value="bueno"> Bueno</label>
+            <label class="nota"><input type="radio" name="calificacion" value="malo"> Malo</label>
+          </div>
+        </fieldset>
+
         <button type="submit" id="enviar">Guardar</button>
         <div class="aviso" id="aviso"></div>
       </form>
@@ -84,11 +112,7 @@ const lista = document.getElementById("lista");
 const aviso = document.getElementById("aviso");
 const boton = document.getElementById("enviar");
 
-function texto(valor) {
-  const nodo = document.createElement("span");
-  nodo.textContent = valor;
-  return nodo;
-}
+const ROTULO = { excelente: "Excelente", bueno: "Bueno", malo: "Malo" };
 
 function fecha(valor) {
   const d = new Date(valor);
@@ -108,24 +132,35 @@ function pintar(renglones) {
   for (const r of renglones) {
     const fila = document.createElement("div");
     fila.className = "fila";
+
     const quien = document.createElement("div");
     quien.className = "quien";
-    quien.appendChild(texto(r.nombre));
+    quien.textContent = r.nombre;
     const cuando = document.createElement("span");
     cuando.className = "cuando";
     cuando.textContent = fecha(r.creado_en);
     quien.appendChild(cuando);
+
     const dice = document.createElement("p");
     dice.className = "dice";
     dice.textContent = r.mensaje;
+
     fila.append(quien, dice);
+
+    if (ROTULO[r.calificacion]) {
+      const nota = document.createElement("p");
+      nota.className = "califica";
+      nota.textContent = "Califica el buzón como: " + ROTULO[r.calificacion];
+      fila.appendChild(nota);
+    }
+
     lista.appendChild(fila);
   }
 }
 
 async function cargar() {
   try {
-    const r = await fetch(URL_BASE + "?select=nombre,mensaje,creado_en&order=creado_en.desc", { headers: CABECERAS });
+    const r = await fetch(URL_BASE + "?select=nombre,mensaje,calificacion,creado_en&order=creado_en.desc", { headers: CABECERAS });
     if (!r.ok) throw new Error(r.status);
     pintar(await r.json());
   } catch (e) {
@@ -141,14 +176,19 @@ document.getElementById("formulario").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const nombre = document.getElementById("nombre").value.trim();
   const mensaje = document.getElementById("mensaje").value.trim();
+  const marcada = document.querySelector('input[name="calificacion"]:checked');
   if (!nombre || !mensaje) return;
+
+  const renglon = { nombre, mensaje };
+  if (marcada) renglon.calificacion = marcada.value;
+
   boton.disabled = true;
   aviso.textContent = "Guardando…";
   try {
     const r = await fetch(URL_BASE, {
       method: "POST",
       headers: { ...CABECERAS, "Content-Type": "application/json", Prefer: "return=minimal" },
-      body: JSON.stringify({ nombre, mensaje })
+      body: JSON.stringify(renglon)
     });
     if (!r.ok) throw new Error(r.status);
     ev.target.reset();
