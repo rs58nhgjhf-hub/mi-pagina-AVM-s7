@@ -1,15 +1,18 @@
 # CLAUDE.md
 
 Este archivo lo lee Claude cada vez que trabaja en esta carpeta, sin que se lo pidas.
-Lo vas a llenar en la sesión. Por ahora trae solo las reglas que aplican desde el
-primer minuto.
+Está lleno. Si algo de aquí deja de ser cierto, se corrige aquí antes de seguir
+trabajando.
 
 ---
 
 ## 1. Qué es este proyecto y quién lo usa
 
-*(Lo escribes tú en la sesión: dos líneas. Qué es la página, para quién es y cada
-cuándo se usa.)*
+Es un buzón de sugerencias publicado en internet. Quien entra deja su nombre, su
+mensaje y, si quiere, una calificación del buzón, y ve lo que han escrito los demás.
+
+Lo usa cualquiera: no pide contraseña ni cuenta, basta tener la liga. Sin frecuencia
+fija, se usa cuando alguien tiene algo que decir.
 
 ## 2. De dónde sale cada cifra
 
@@ -25,6 +28,11 @@ La tabla `registros` tiene estas columnas:
 | `nombre` | texto, obligatorio | la persona, en el formulario |
 | `mensaje` | texto, obligatorio | la persona, en el formulario |
 | `creado_en` | fecha y hora | la base, sola, al momento de guardar |
+| `calificacion` | texto, opcional | la persona, en el formulario |
+
+`calificacion` solo acepta tres palabras, `excelente`, `bueno` o `malo`, y puede
+quedar vacía. La base rechaza cualquier otra cosa; no es una validación de la
+página, es una restricción de la tabla.
 
 Permisos de la tabla para quien entra a la página: puede **leer** y puede
 **agregar** renglones. No puede modificar, ni borrar, ni vaciar. Eso no es un
@@ -55,18 +63,43 @@ proyecto y la llave publicable. No hay más lugares donde buscarlos.
 
 ## 5. Mi regla de verificación
 
-*(La escribes tú en la sesión: con qué frase cierras lo que entregas y qué tiene
-que ser cierto para que puedas publicarlo.)*
+Nada está entregado hasta que está fusionado y publicado. La frase con la que se
+cierra un trabajo es **hecho pull y despliegue**.
+
+Para poder decirla tienen que ser ciertas tres cosas: que el cambio esté fusionado
+en `main`; que Netlify haya publicado un despliegue de ese mismo commit y haya
+quedado en estado listo; y que lo que cambió se pueda comprobar en la página
+publicada o en la tabla, con el dato a la vista. Comprobado quiere decir visto, no
+supuesto.
 
 ## 6. Cómo vuelvo a abrir esto
 
 - El proyecto vive en `rs58nhgjhf-hub/mi-pagina-AVM-s7`, en GitHub.
 - Se abre pidiéndole a Claude una sesión sobre este repo; no hace falta descargarlo.
-- La página publicada está en la liga que da Netlify. *(Pendiente: todavía no se
-  ha conectado Netlify a este repositorio.)*
+- La página publicada está en `https://mi-pagina-avm-s7.netlify.app`. El proyecto
+  en Netlify se llama **mi-pagina-avm-s7** y está amarrado a este repositorio: cada
+  cambio que llega a `main` se publica solo, sin oprimir nada.
 - La base de datos está en supabase.com, en el proyecto **curso-S7claude-**,
   región us-east-1. Su dirección es `https://aheqqfzgfgjxwylupmrd.supabase.co`.
 
 > **Si la página deja de mostrar datos después de una semana sin usarla**, casi
 > siempre es que el proyecto gratuito de Supabase se pausó. Se despierta con el
 > botón **Resume project**.
+
+## 7. Sistema de diseño
+
+Tres colores y una tipografía. No se agrega ninguno más sin que yo lo pida.
+
+| Papel | Color | Dónde va |
+|---|---|---|
+| Azul | `#2b5f96` | botón de guardar, marca de la calificación, contorno de foco |
+| Gris | `#f4f6f8` al fondo, `#dde3ea` en los bordes | fondo de la página y líneas que separan |
+| Negro | `#1a2027` | todo el texto |
+
+La tipografía es **Arial**, con `Helvetica, sans-serif` de respaldo por si el
+aparato no la tiene.
+
+En modo oscuro se conservan los mismos tres papeles con versiones aclaradas u
+oscurecidas de esos colores, que ya están escritas en `index.html`. El azul es el
+único acento: si algo necesita destacar, se destaca con azul, no con un color
+nuevo.
