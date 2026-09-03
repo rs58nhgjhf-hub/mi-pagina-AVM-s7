@@ -1,31 +1,19 @@
-# Mi página
+# Buzón de sugerencias
 
-Una página pública con un formulario que guarda lo que la gente escribe, y una
-lista que muestra lo guardado.
+Página pública donde cualquiera deja su nombre, un mensaje y, si quiere, una calificación
+del buzón entre excelente, bueno y malo, y ve lo que escribieron los demás. No pide cuenta
+ni contraseña: basta la liga. Está publicada en https://mi-pagina-avm-s7.netlify.app
 
-Construida en la **Sesión 7 del curso Claude for Business**, sin escribir código:
-todo se le pidió a Claude en español.
+**De dónde salen los datos.** De la tabla `registros` de Supabase, en el proyecto
+`curso-S7claude-`. Nada de lo que se ve está escrito a mano en el HTML. Quien entra puede
+leer y agregar renglones; no puede modificar, borrar ni vaciar, y eso lo impone la base, no
+la página. La dirección del proyecto y la llave publicable están dentro de `index.html`;
+una llave que empiece con `sb_secret_` o diga `service_role` nunca va aquí.
 
-## Cómo está armado
+**Qué hay en `.claude`.** El archivo `agents/revisor-antes-de-publicar.md`: un revisor que
+se pide diciendo "revisa antes de publicar". Compara la rama contra `main` y reporta llaves
+filtradas, cambios de más y código mejorable. No arregla nada, solo dice qué encontró.
 
-| Pieza | Qué hace |
-|---|---|
-| **GitHub** | Guarda este proyecto y su historial |
-| **Netlify** | Publica lo que hay aquí como página web |
-| **Supabase** | Guarda lo que la gente escribe en el formulario |
-
-## Cómo se cambia
-
-1. Se abre una sesión de Claude sobre este repositorio.
-2. Se le pide el cambio **en una rama**, no en `main`.
-3. Netlify hace una **vista previa** con su propia liga: ahí se revisa.
-4. Cuando está bien, se fusiona la rama. Eso —y solo eso— publica.
-
-> **Fusionar cuesta.** El plan gratuito de Netlify alcanza para unas veinte
-> publicaciones al mes. Las vistas previas son gratis e ilimitadas: se itera ahí
-> y se fusiona poco.
-
-## Qué NO va en este repositorio
-
-La llave `sb_publishable_` sí puede estar aquí: está hecha para andar a la vista.
-La que empieza con `sb_secret_` o dice `service_role`, **nunca**.
+**Para continuar.** Abre una sesión de Claude sobre este repositorio y lee `CLAUDE.md`
+antes que nada: ahí están las reglas del proyecto y de dónde sale cada dato. Pide los
+cambios en una rama, nunca sobre `main`. Al fusionar a `main`, Netlify publica solo.
